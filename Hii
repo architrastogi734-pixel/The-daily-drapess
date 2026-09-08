@@ -1,0 +1,343 @@
+{
+  "name": "the-daily-drapes",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "lint": "tsc --noEmit",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "lucide-react": "^1.16.0",
+    "motion": "^12.4.7",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.0.0",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "tailwindcss": "^4.0.0",
+    "typescript": "~5.6.2",
+    "vite": "^6.0.5"
+  }
+}
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>THE DAILY DRAPES | Editorial Brand & Design Atelier</title>
+    <meta name="description" content="Editorial brand identity, visual curation, nail boards, and design archives curated by The Daily Drapes." />
+    <!-- Google Fonts for Editorial Luxury -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body class="bg-[#120508] text-[#ecd0c3] antialiased selection:bg-[#d49887] selection:text-[#120508]">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --brand-burgundy: #140407;
+    --brand-burgundy-card: #1c060b;
+    --brand-wine: #3c1119;
+    --brand-rose-gold: #d49887;
+    --brand-creme: #ecd0c3;
+    --brand-offwhite: #f5e6de;
+  }
+
+  body {
+    background-color: #120508;
+    color: #ecd0c3;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  h1, h2, h3, .font-serif-luxury {
+    font-family: 'Cinzel', serif;
+  }
+
+  .font-editorial {
+    font-family: 'Playfair Display', serif;
+  }
+
+  .font-display {
+    font-family: 'Cinzel', serif;
+  }
+
+  .font-sans-clean {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+}
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 22s linear infinite;
+}
+import React, { useState } from 'react';
+import Navbar from './components/Navbar';
+import HeroSection from './components/HeroSection';
+import AboutSection from './components/AboutSection';
+import FeaturedWorkSection from './components/FeaturedWorkSection';
+import CaseStudiesSection from './components/CaseStudiesSection';
+import NailBoardSection from './components/NailBoardSection';
+import ProcessSection from './components/ProcessSection';
+import ConnectSection from './components/ConnectSection';
+import Footer from './components/Footer';
+import SocialUrlModal from './components/SocialUrlModal';
+
+export default function App() {
+  const [socialModalOpen, setSocialModalOpen] = useState(false);
+  const [activePlatform, setActivePlatform] = useState<'pinterest' | 'threads'>('pinterest');
+
+  const handleOpenSocialModal = (platform: 'pinterest' | 'threads') => {
+    setActivePlatform(platform);
+    setSocialModalOpen(true);
+  };
+
+  return (
+    <div className="min-h-screen bg-[#120508] text-[#ecd0c3] flex flex-col font-sans-clean selection:bg-[#d49887] selection:text-[#120508]">
+      {/* Top Fixed Editorial Navigation */}
+      <Navbar onOpenSocialModal={handleOpenSocialModal} />
+
+      {/* Main Content Sections */}
+      <main className="flex-grow">
+        <HeroSection onOpenSocialModal={handleOpenSocialModal} />
+        <AboutSection />
+        <FeaturedWorkSection />
+        <CaseStudiesSection />
+        <NailBoardSection onOpenSocialModal={handleOpenSocialModal} />
+        <ProcessSection />
+        <ConnectSection onOpenSocialModal={handleOpenSocialModal} />
+      </main>
+
+      {/* Footer */}
+      <Footer onOpenSocialModal={handleOpenSocialModal} />
+
+      {/* Social URL Customizer Modal */}
+      <SocialUrlModal
+        isOpen={socialModalOpen}
+        onClose={() => setSocialModalOpen(false)}
+        platform={activePlatform}
+      />
+    </div>
+  );
+}
+import React from 'react';
+import { ArrowRight, Bookmark } from 'lucide-react';
+import CircularStamp from './CircularStamp';
+import { brandImages } from '../data/images';
+
+interface HeroSectionProps {
+  onOpenSocialModal: (platform: 'pinterest' | 'threads') => void;
+}
+
+export default function HeroSection({ onOpenSocialModal }: HeroSectionProps) {
+  const handleOpenPinterest = () => {
+    const saved = localStorage.getItem('daily_drapes_pinterest_url');
+    if (saved) {
+      window.open(saved, '_blank', 'noopener,noreferrer');
+    } else {
+      onOpenSocialModal('pinterest');
+    }
+  };
+
+  return (
+    <section
+      id="hero"
+      className="relative min-h-screen pt-32 pb-20 sm:pt-36 sm:pb-24 lg:pt-40 lg:pb-28 flex items-center justify-center overflow-hidden bg-[#120508]"
+    >
+      {/* Ambient background glowing accents */}
+      <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-[#4a121d]/25 rounded-full blur-3xl pointer-events-none" />
+      
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 w-full relative z-10">
+        
+        {/* Main Architectural Vertical Rectangle Container */}
+        <div className="relative max-w-6xl mx-auto rounded-3xl border border-[#3e131b] bg-[#19060b]/95 backdrop-blur-md p-6 sm:p-10 lg:p-12 xl:p-14 shadow-2xl shadow-black/90">
+          
+          {/* Subtle inner outline for luxury framing */}
+          <div className="absolute inset-2 sm:inset-3 rounded-[20px] border border-[#d49887]/10 pointer-events-none" />
+
+          {/* Interior Grid: 2 Columns */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 xl:gap-16 items-center relative z-10">
+            
+            {/* Left Column: Brand Name & Navigation Down on the Left (Clean, Spacious, No Overlap) */}
+            <div className="lg:col-span-7 flex flex-col justify-between text-left h-full">
+              <div>
+                {/* Refined Eyebrow */}
+                <div className="flex items-center gap-3 mb-4 sm:mb-5">
+                  <span className="w-8 h-px bg-[#d49887]/80" />
+                  <span className="text-[11px] sm:text-xs uppercase tracking-[0.28em] text-[#d49887] font-medium font-sans-clean">
+                    STUDIO & EDITORIAL ARCHIVE
+                  </span>
+                </div>
+
+                {/* The Daily Drapes Brand Name with deliberate, non-overlapping line heights */}
+                <h1 className="font-display font-black text-4xl sm:text-5xl md:text-6xl lg:text-[68px] xl:text-[76px] text-[#f3ded2] tracking-tight leading-[1.06] sm:leading-[1.02] uppercase select-none my-3 sm:my-4 drop-shadow-md">
+                  THE DAILY <br />
+                  <span className="font-editorial italic font-normal text-[#d49887]">DRAPES</span>
+                </h1>
+
+                {/* Subtitle / Philosophy */}
+                <p className="text-sm sm:text-base text-[#c59e94] max-w-lg font-light leading-relaxed my-5 sm:my-6">
+                  Curating elevated brand identities, aesthetic lookbooks, and fluid silhouettes.
+                  Explore all source references, manicure palettes, and moodboards directly on Pinterest and Threads.
+                </p>
+
+                {/* Pillars */}
+                <div className="flex flex-wrap items-center gap-2 text-[11px] sm:text-xs uppercase tracking-[0.25em] text-[#a67c74] font-medium mb-8 sm:mb-10">
+                  <span>BRANDING</span>
+                  <span className="text-[#d49887]">•</span>
+                  <span>WEB DESIGN</span>
+                  <span className="text-[#d49887]">•</span>
+                  <span>CREATIVE DIRECTION</span>
+                </div>
+              </div>
+
+              {/* Action Buttons: Down on the left side of the rectangle with robust spacing */}
+              <div className="pt-6 sm:pt-7 border-t border-[#3c1219]/80 mt-auto">
+                <div className="flex flex-wrap items-center gap-3.5 sm:gap-4">
+                  {/* VIEW WORK -> */}
+                  <a
+                    href="#work"
+                    className="group inline-flex items-center gap-3 px-7 sm:px-8 py-3.5 bg-[#d49887] hover:bg-[#ecd0c3] text-[#120407] rounded-full text-xs font-semibold tracking-[0.2em] uppercase transition-all duration-300 shadow-xl shadow-[#d49887]/25 active:scale-95 whitespace-nowrap"
+                  >
+                    <span>VIEW WORK</span>
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </a>
+
+                  {/* PINTEREST BOARD */}
+                  <button
+                    onClick={handleOpenPinterest}
+                    className="inline-flex items-center gap-2.5 px-6 py-3.5 bg-[#250c12] hover:bg-[#38121b] border border-[#d49887]/45 text-[#ecd0c3] rounded-full text-xs font-medium tracking-[0.18em] uppercase transition-all shadow-lg active:scale-95 whitespace-nowrap"
+                  >
+                    <Bookmark className="w-3.5 h-3.5 fill-current text-[#d49887]" />
+                    <span>PINTEREST BOARD</span>
+                  </button>
+                </div>
+
+                <div className="mt-5 sm:mt-6 flex items-center gap-2.5">
+                  <span className="w-2 h-2 rounded-full bg-[#d49887] animate-pulse shrink-0" />
+                  <p className="text-[11px] text-[#a67c74] tracking-wider uppercase font-sans-clean">
+                    Active Boards • Updated Weekly with Curated Palettes
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column: Photo of the Girl in Vertical Rectangle with securely anchored seal */}
+            <div className="lg:col-span-5 relative flex items-center justify-center py-6 sm:py-8 lg:py-2">
+              
+              {/* Dedicated container to anchor portrait and seal with zero spill or overlap */}
+              <div className="relative w-full max-w-[320px] sm:max-w-[360px] lg:max-w-[380px] aspect-[3/4.2]">
+                
+                {/* Circular Atelier Seal neatly anchored to the top-right corner of the photo frame */}
+                <div className="absolute -top-5 -right-4 sm:-top-6 sm:-right-5 lg:-top-7 lg:-right-6 z-20 pointer-events-none select-none">
+                  <CircularStamp
+                    text="DESIGNING WITH PURPOSE & PASSION"
+                    icon="flower"
+                    size={115}
+                  />
+                </div>
+
+                {/* Vertical Rectangle Photo Frame for the Girl */}
+                <div className="w-full h-full rounded-2xl overflow-hidden border border-[#521824] shadow-2xl shadow-black/90 bg-[#120407]">
+                  <img
+                    src={brandImages.heroModel}
+                    alt="The Daily Drapes Editorial Model"
+                    className="w-full h-full object-cover object-center filter brightness-[0.98] contrast-[1.03]"
+                  />
+                  {/* Subtle bottom gradient vignette */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#140407]/40 via-transparent to-transparent pointer-events-none" />
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+  );
+}import React from 'react';
+
+interface CircularStampProps {
+  text?: string;
+  size?: number;
+  icon?: 'star' | 'flower' | 'cross';
+}
+
+export default function CircularStamp({
+  text = 'DESIGNING WITH PURPOSE & PASSION',
+  size = 130,
+}: CircularStampProps) {
+  const radius = 42;
+  const circumference = 2 * Math.PI * radius;
+
+  return (
+    <div
+      className="relative flex items-center justify-center select-none"
+      style={{ width: size, height: size }}
+    >
+      {/* Outer Glowing Background Blur */}
+      <div className="absolute inset-0 rounded-full bg-[#1b060b] border border-[#541724]/90 shadow-xl shadow-black/80" />
+
+      {/* Rotating Circular Text SVG */}
+      <div className="absolute inset-0 animate-spin-slow">
+        <svg viewBox="0 0 100 100" className="w-full h-full">
+          <defs>
+            <path
+              id="circlePath"
+              d="M 50, 50 m -42, 0 a 42,42 0 1,1 84,0 a 42,42 0 1,1 -84,0"
+            />
+          </defs>
+          <text
+            fill="#d49887"
+            fontSize="6.8"
+            letterSpacing="0.28em"
+            fontWeight="600"
+            className="font-sans-clean uppercase"
+          >
+            <textPath href="#circlePath" startOffset="0%" textLength={circumference * 0.96}>
+              {text} •
+            </textPath>
+          </text>
+        </svg>
+      </div>
+
+      {/* Center Botanical Floral Emblem */}
+      <div className="relative z-10 w-9 h-9 rounded-full bg-[#3c121a] flex items-center justify-center border border-[#d49887]/50 shadow-inner">
+        <svg viewBox="0 0 24 24" className="w-5 h-5 text-[#ecd0c3] fill-current">
+          <path d="M12 2C13 6 16 8 20 9C16 10 13 12 12 16C11 12 8 10 4 9C8 8 11 6 12 2Z" />
+          <circle cx="12" cy="9" r="1.5" className="fill-[#140407]" />
+        </svg>
+      </div>
+    </div>
+  );
+}export const brandImages = {
+  heroModel: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1000&q=85",
+  aboutEditorial: "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=900&q=80",
+  velvetBackground: "https://images.unsplash.com/photo-1518895949257-7621c3c786d7?auto=format&fit=crop&w=1200&q=80",
+  rosePetalMood: "https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&w=900&q=80",
+  studioArchive: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=900&q=80"
+};
+
+
